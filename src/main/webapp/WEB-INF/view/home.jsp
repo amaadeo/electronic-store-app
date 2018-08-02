@@ -33,8 +33,8 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 	<link rel="stylesheet" href="${pageContext.request.contextPath}/resources/css/jquery.countdown.css" /> <!-- countdown -->
 	<!-- //js -->
 	<!-- web fonts -->
-	<link href='//fonts.googleapis.com/css?family=Glegoo:400,700' rel='stylesheet' type='text/css'>
-	<link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+	<link href='<c:url value="//fonts.googleapis.com/css?family=Glegoo:400,700"/>' rel='stylesheet' type='text/css'>
+	<link href='<c:url value="//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic"/>' rel='stylesheet' type='text/css'>
 	<!-- //web fonts -->
 	<!-- start-smooth-scrolling -->
 	<script type="text/javascript">
@@ -76,7 +76,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
                                 $(document).ready(function () {
                                     $('#horizontalTab').easyResponsiveTabs({
                                         type: 'default', //Types: default, vertical, accordion
-                                        width: '100px', //auto or any width like 600px
+                                        width: '100px'; //auto or any width like 600px
                                     });
                                 });
                             </script>
@@ -95,7 +95,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 					<div class="row">
 						<div class="col-md-8 modal_body_left modal_body_left1" style="padding-right:3em;">
 							<div class="sap_tabs">
-								<div id="horizontalTab" style="display: block; width: 100%; margin: 0px;">
+								<div id="horizontalTab" style="display: block; width: 100%; margin: 0;">
 									<ul>
 										<li class="resp-tab-item" aria-controls="tab_item-0"><span>Sign in</span></li>
 										<li class="resp-tab-item" aria-controls="tab_item-1"><span>Sign up</span></li>
@@ -106,13 +106,13 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 												<form:form action="${pageContext.request.contextPath}/authenticateTheUser"
 														   method="POST">
 
-													<input type="text" name="username" required="">
-													<input type="password" name="password" required="">
+													<input placeholder="Email..." type="text" name="username" required="">
+													<input placeholder="Haslo...    " type="password" name="password" required="">
 
 													<c:if test="${param.error != null}">
-
-														<p class="failed">Sorry! You entered invalid username/password.</p>
-
+														<div class="alert alert-danger" role="alert">
+															<strong>Blad!</strong> Nieprawidlowy email lub haslo.
+														</div>
 													</c:if>
 													<div class="sign-up">
 														<input type="submit" value="Sign in"/>
@@ -165,10 +165,12 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <div class="header" id="home1">
 	<div class="container">
 		<div class="w3l_login">
-			<a href="#" data-toggle="modal" data-target="#myModal88"><span class="glyphicon glyphicon-user" aria-hidden="true"></span></a>
+			<a href="#" data-toggle="modal" data-target="#myModal88">
+				<span class="glyphicon glyphicon-user" aria-hidden="true" ></span>
+			</a>
 		</div>
 		<div class="w3l_logo">
-			<h1><a href="index.html">Electronic Store<span>Your stores. Your place.</span></a></h1>
+			<h1><a href="<c:url value="/"/>">Electronic Store<span>Your stores. Your place.</span></a></h1>
 		</div>
 		<div class="search">
 			<input class="search_box" type="checkbox" id="search_box">
@@ -205,10 +207,9 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			</div>
 			<div class="collapse navbar-collapse" id="bs-megadropdown-tabs">
 				<ul class="nav navbar-nav">
-					<li><a href="index.html" class="act">Home</a></li>
 					<!-- Mega Menu -->
 					<li class="dropdown">
-						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Products <b class="caret"></b></a>
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Produkty <b class="caret"></b></a>
 						<ul class="dropdown-menu multi-column columns-3">
 							<div class="row">
 								<div class="col-sm-3">
@@ -248,14 +249,17 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 							</div>
 						</ul>
 					</li>
-					<li><a href="about.html">About Us</a></li>
-					<li class="w3pages"><a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Pages <span class="caret"></span></a>
-						<ul class="dropdown-menu">
-							<li><a href="icons.html">Web Icons</a></li>
-							<li><a href="codes.html">Short Codes</a></li>
-						</ul>
-					</li>
-					<li><a href="mail.html">Mail Us</a></li>
+					<li><a href="about.html">O nas</a></li>
+					<li><a href="mail.html">Kontakt</a></li>
+					<sec:authorize access="hasRole('CLIENT')">
+						<li><a href="mail.html">Zamowienia</a></li>
+					</sec:authorize>
+					<sec:authorize access="hasAnyRole('EMPLOYEE', 'ADMIN')">
+						<li><a href="mail.html">Pracownik</a></li>
+					</sec:authorize>
+					<sec:authorize access="hasRole('ADMIN')">
+						<li><a href="mail.html">Admin</a></li>
+					</sec:authorize>
 				</ul>
 			</div>
 		</nav>

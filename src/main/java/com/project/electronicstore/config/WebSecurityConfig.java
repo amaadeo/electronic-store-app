@@ -1,5 +1,6 @@
 package com.project.electronicstore.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -7,27 +8,27 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
 
+import javax.sql.DataSource;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private DataSource dataSource;
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-
-
-        User.UserBuilder users = User.withDefaultPasswordEncoder();
-
-        auth.inMemoryAuthentication().withUser(users.username("admin").password("admin").roles("ADMIN"));
-
-
+        auth.jdbcAuthentication().dataSource(dataSource);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
         http.authorizeRequests()
-                .anyRequest()
-                .authenticated()
+                .antMatchers("/").hasRole("CLIENT")
+                .antMatchers("/employee").hasRole("EMPLOYEE")
+                .antMatchers("/admin").hasRole("ADMIN")
                 .and()
                 .formLogin()
                     .loginPage("/")
